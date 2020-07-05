@@ -3,6 +3,25 @@ var gamePattern = [];
 var userClickedPattern = [];
 var started = false;
 var level = 0;
+var windowSize = window.matchMedia("(max-width: 990px)");
+
+function allSpan(windowSize) {
+
+  if (windowSize.matches) {
+    $("#span1").addClass("span1");
+    $("#span2").removeClass("span2");
+    $("#span-button").removeClass("span-button");
+  } else {
+    $("#span2").addClass("span2");
+    $("#span1").removeClass("span1");
+    $("#span-button").addClass("span-button");
+  }
+
+}
+
+allSpan(windowSize);
+windowSize.addListener(allSpan);
+
 
 
 $(document).keypress(function() {
@@ -16,15 +35,15 @@ $(document).keypress(function() {
   }
 });
 
-$(".start-btn").click(function(){
+$(".start-btn").click(function() {
 
-    if (!started) {
-      nextSequence();
-      started = true;
-      $("h1").text("Level " + level);
-    } else {
-      alert("Key pressing not allowed now !!");
-    }
+  if (!started) {
+    nextSequence();
+    started = true;
+    $("h1").text("Level " + level);
+  } else {
+    alert("Key pressing not allowed now !!");
+  }
 
 });
 
@@ -71,7 +90,7 @@ function animatePress(currentColour) {
   $("." + currentColour).addClass("pressed");
   setTimeout(function() {
 
-  $("." + currentColour).removeClass("pressed");
+    $("." + currentColour).removeClass("pressed");
   }, 100);
 
 }
@@ -100,7 +119,8 @@ function checkAnswer(currentLevel) {
     var wrong = new Audio("sounds/wrong.mp3");
     wrong.preLoad = "auto";
     wrong.play();
-    $("h1").text("Game Over, Press Any Key to Restart");
+    gameOverStat(windowSize);
+    windowSize.addListener(gameOverStat);
     startOver();
 
   }
@@ -113,4 +133,13 @@ function startOver() {
   level = 0;
   userClickedPattern = [];
 
+}
+
+
+function gameOverStat(x) {
+  if (x.matches) {
+    $("h1").text("Game Over, Press Start to start again");
+  } else {
+    $("h1").text("Game Over, Press Any Key to Restart");
+  }
 }
